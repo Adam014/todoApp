@@ -1,19 +1,19 @@
-import '@styles/globals.css';
+import "@styles/globals.css";
+import Navbar from "@components/Navbar";
 
 export const metadata = {
-  title: 'Simple TODO App',
-  description: 'Pocket Guide to the Prices of Life.',
-}
+  title: "Simple TODO App",
+};
 
-export default function RootLayout() {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-
-          <main className='app'>
-          </main>
-
+        <main className="app">
+          <Navbar />
+          {children}
+        </main>
       </body>
     </html>
-  )
+  );
 }
