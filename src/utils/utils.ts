@@ -14,6 +14,9 @@ export const sendEmail = (e: EmailFormEvent): void => {
   const formObject = Object.fromEntries(formData);
   console.log("Submitted Values:", formObject);
 
+  // Extract relevant data for the toast message
+  const { from_name, from_surname, from_email } = formObject;
+
   emailjs
     .sendForm(
       "nomadify_contact",
@@ -24,7 +27,7 @@ export const sendEmail = (e: EmailFormEvent): void => {
     .then(
       () => {
         e.target.reset();
-        toast.success("The email was sent!");
+        toast.success(`The email was sent! \n\n Name: ${from_name} ${from_surname} \n Email: ${from_email}`);
       },
       (error) => {
         console.log(error.text);
