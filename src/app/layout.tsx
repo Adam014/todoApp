@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react"
 import "@styles/globals.css";
 import Navbar from "@components/Navbar";
 
@@ -5,7 +6,11 @@ export const metadata = {
   title: "Simple TODO App",
 };
 
-export default function RootLayout({ children }) {
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
