@@ -8,6 +8,12 @@ interface EmailFormEvent extends React.FormEvent<HTMLFormElement> {
 // function for sending the email
 export const sendEmail = (e: EmailFormEvent): void => {
   e.preventDefault();
+
+  // Log the submitted values
+  const formData = new FormData(e.target);
+  const formObject = Object.fromEntries(formData);
+  console.log("Submitted Values:", formObject);
+
   emailjs
     .sendForm(
       "nomadify_contact",
@@ -22,7 +28,8 @@ export const sendEmail = (e: EmailFormEvent): void => {
       },
       (error) => {
         console.log(error.text);
-        toast.error("The email cannot be send...");
+        toast.error("The email cannot be sent...");
       },
     );
 };
+
