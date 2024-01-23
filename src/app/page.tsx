@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { fetchAllIssues, filterIssuesByStatus, Issue } from '../utils/utils';
-import IssueCard from '@components/IssueCard';
+import { useEffect, useState } from "react";
+import { fetchAllIssues, filterIssuesByStatus, Issue } from "../utils/utils";
+import IssueCard from "@components/IssueCard";
 
 export default function Home() {
   const [allIssues, setAllIssues] = useState<Issue[]>([]);
@@ -13,7 +13,7 @@ export default function Home() {
         const issues = await fetchAllIssues();
         setAllIssues(issues);
       } catch (error) {
-        console.error('Error fetching issues');
+        console.error("Error fetching issues");
       }
     };
 
@@ -25,7 +25,7 @@ export default function Home() {
   const doneIssues = filterIssuesByStatus(allIssues, true);
 
   return (
-   <>
+    <>
       <section>
         <div className="flex">
           <div className="flex-1">

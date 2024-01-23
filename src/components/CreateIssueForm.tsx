@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
-import { saveIssueToSupabase, Issue, currentDate } from '@utils/utils';
+import React, { useState } from "react";
+import { saveIssueToSupabase, Issue, currentDate } from "@utils/utils";
 
 const CreateIssueForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    estimatedTime: '',
+    name: "",
+    description: "",
+    estimatedTime: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -32,7 +34,9 @@ const CreateIssueForm = () => {
         done: false,
         created_at: new Date(),
         update_time: new Date(),
-        estimated_time: formData.estimatedTime ? new Date(formData.estimatedTime) : null,
+        estimated_time: formData.estimatedTime
+          ? new Date(formData.estimatedTime)
+          : null,
         success_time: null,
       };
 
@@ -45,9 +49,9 @@ const CreateIssueForm = () => {
       await saveIssueToSupabase(newIssue);
 
       // Optionally, you can reset the form or redirect the user to a different page
-      setFormData({ name: '', description: '', estimatedTime: '' });
+      setFormData({ name: "", description: "", estimatedTime: "" });
     } catch (error) {
-      console.error('Error saving issue');
+      console.error("Error saving issue");
       // Optionally, you can handle error feedback to the user
     }
   };
@@ -103,7 +107,7 @@ const CreateIssueForm = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default CreateIssueForm;

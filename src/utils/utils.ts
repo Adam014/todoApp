@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import emailjs from "emailjs-com";
-import supabase from './db/supabaseConfig';
+import supabase from "./db/supabaseConfig";
 
 interface EmailFormEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement;
@@ -40,7 +40,9 @@ export const sendEmail = (e: EmailFormEvent): void => {
     .then(
       () => {
         e.target.reset();
-        toast.success(`The email was sent! \n\n Name: ${from_name} ${from_surname} \n Email: ${from_email}`);
+        toast.success(
+          `The email was sent! \n\n Name: ${from_name} ${from_surname} \n Email: ${from_email}`,
+        );
       },
       (error) => {
         console.log(error.text);
@@ -53,28 +55,30 @@ export const sendEmail = (e: EmailFormEvent): void => {
 export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
   try {
     // Save the data to the 'issues' table in Supabase
-    const { data, error } = await supabase.from('issues').upsert([issue as any]);
+    const { data, error } = await supabase
+      .from("issues")
+      .upsert([issue as any]);
 
     if (error) {
       throw error;
     }
 
-    toast.success('Issue saved successfully');
-    console.log('Issue saved successfully:');
+    toast.success("Issue saved successfully");
+    console.log("Issue saved successfully:");
   } catch (error) {
-    console.error('Error saving issue');
+    console.error("Error saving issue");
     // Optionally, you can handle error feedback to the user
-    toast.error('Error saving issue');
+    toast.error("Error saving issue");
   }
 };
 
 // Get the current date in "YYYY-MM-DD" format
-export const currentDate = new Date().toISOString().split('T')[0];
+export const currentDate = new Date().toISOString().split("T")[0];
 
 // Function to fetch all issues from Supabase
 export const fetchAllIssues = async (): Promise<Issue[]> => {
   try {
-    const { data, error } = await supabase.from('issues').select('*');
+    const { data, error } = await supabase.from("issues").select("*");
 
     if (error) {
       throw error;
@@ -82,12 +86,15 @@ export const fetchAllIssues = async (): Promise<Issue[]> => {
 
     return data || [];
   } catch (error) {
-    console.error('Error fetching issues');
+    console.error("Error fetching issues");
     throw error;
   }
 };
 
 // Helper function to filter issues based on their 'done' status
-export const filterIssuesByStatus = (issues: Issue[], done: boolean): Issue[] => {
+export const filterIssuesByStatus = (
+  issues: Issue[],
+  done: boolean,
+): Issue[] => {
   return issues.filter((issue) => issue.done === done);
 };
