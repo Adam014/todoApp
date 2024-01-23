@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
-import { saveIssueToSupabase, Issue } from '@utils/utils';
+import { saveIssueToSupabase, Issue, currentDate } from '@utils/utils';
 
 const CreateIssueForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    estimatedTime: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      estimatedTime: e.target.value,
     });
   };
 
@@ -24,15 +32,20 @@ const CreateIssueForm = () => {
         done: false,
         created_at: new Date(),
         update_time: new Date(),
-        estimated_time: null,
+        estimated_time: formData.estimatedTime ? new Date(formData.estimatedTime) : null,
         success_time: null,
       };
+
+      // Automatically set 'done' to true if the current date is equal to or later than the estimated time
+      if (newIssue.estimated_time && newIssue.estimated_time <= new Date()) {
+        newIssue.done = true;
+      }
 
       // Save the issue to Supabase
       await saveIssueToSupabase(newIssue);
 
       // Optionally, you can reset the form or redirect the user to a different page
-      setFormData({ name: '', description: '' });
+      setFormData({ name: '', description: '', estimatedTime: '' });
     } catch (error) {
       console.error('Error saving issue');
       // Optionally, you can handle error feedback to the user
@@ -71,6 +84,18 @@ const CreateIssueForm = () => {
               value={formData.description}
               onChange={handleChange}
             ></textarea>
+          </div>
+          <div>
+            <label className="font-medium">Estimated Time</label>
+            <input
+              type="date"
+              required
+              className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+              name="estimatedTime"
+              value={formData.estimatedTime}
+              onChange={handleDateChange}
+              min={currentDate} // Set the min attribute to the current date
+            />
           </div>
           <button className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150">
             Submit

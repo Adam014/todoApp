@@ -66,3 +66,6 @@ export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
     toast.error('Error saving issue');
   }
 };
+
+// Get the current date in "YYYY-MM-DD" format
+export const currentDate = new Date().toISOString().split('T')[0];
