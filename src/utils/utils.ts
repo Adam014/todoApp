@@ -75,15 +75,15 @@ export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
 export const currentDate = new Date().toISOString().split("T")[0];
 
 export const formatDate = (date: Date) => {
-  return new Date(date).toLocaleString('cz-CZ', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    timeZoneName: 'short',
-    timeZone: 'Europe/Prague',
+  return new Date(date).toLocaleString("cz-CZ", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
+    timeZone: "Europe/Prague",
   });
 };
 
@@ -104,7 +104,10 @@ export const fetchAllIssues = async (): Promise<Issue[]> => {
 };
 
 // Function to toggle the 'done' status for an issue and update success_time
-export const toggleDoneStatus = async (issue: Issue, setAllIssues: React.Dispatch<React.SetStateAction<Issue[]>>): Promise<void> => {
+export const toggleDoneStatus = async (
+  issue: Issue,
+  setAllIssues: React.Dispatch<React.SetStateAction<Issue[]>>,
+): Promise<void> => {
   try {
     const now = new Date();
 
@@ -114,19 +117,19 @@ export const toggleDoneStatus = async (issue: Issue, setAllIssues: React.Dispatc
     };
 
     const { data, error } = await supabase
-      .from('issues')
+      .from("issues")
       .update(updates)
-      .eq('id', issue.id);
+      .eq("id", issue.id);
 
     if (error) {
       throw error;
     }
 
     // Fetch the updated data and update the state
-    const updatedIssues = await supabase.from('issues').select('*');
+    const updatedIssues = await supabase.from("issues").select("*");
     setAllIssues(updatedIssues.data || []);
   } catch (error) {
-    console.error('Error toggling done status');
-    toast.error('Error toggling done status');
+    console.error("Error toggling done status");
+    toast.error("Error toggling done status");
   }
 };

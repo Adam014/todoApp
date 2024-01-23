@@ -21,7 +21,10 @@ export default function Home() {
     fetchIssues();
   }, []);
 
-  const handleToggleDone = async (issue: Issue, setAllIssues: React.Dispatch<React.SetStateAction<Issue[]>>) => {
+  const handleToggleDone = async (
+    issue: Issue,
+    setAllIssues: React.Dispatch<React.SetStateAction<Issue[]>>,
+  ) => {
     await toggleDoneStatus(issue, setAllIssues);
   };
 
@@ -35,7 +38,13 @@ export default function Home() {
             {allIssues
               .filter((issue) => !issue.done)
               .map((undoneIssue) => (
-              <IssueCard key={undoneIssue.id} issue={undoneIssue} onToggleDone={(issue) => handleToggleDone(issue, setAllIssues)} />
+                <IssueCard
+                  key={undoneIssue.id}
+                  issue={undoneIssue}
+                  onToggleDone={(issue) =>
+                    handleToggleDone(issue, setAllIssues)
+                  }
+                />
               ))}
           </div>
           <div className="flex-1 p-10">
@@ -43,7 +52,13 @@ export default function Home() {
             {allIssues
               .filter((issue) => issue.done)
               .map((doneIssue) => (
-              <IssueCard key={doneIssue.id} issue={doneIssue} onToggleDone={(issue) => handleToggleDone(issue, setAllIssues)} />
+                <IssueCard
+                  key={doneIssue.id}
+                  issue={doneIssue}
+                  onToggleDone={(issue) =>
+                    handleToggleDone(issue, setAllIssues)
+                  }
+                />
               ))}
           </div>
         </div>
