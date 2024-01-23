@@ -75,6 +75,19 @@ export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
 // Get the current date in "YYYY-MM-DD" format
 export const currentDate = new Date().toISOString().split("T")[0];
 
+export const formatDate = (date: Date) => {
+  return new Date(date).toLocaleString('cz-CZ', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
+    timeZone: 'Europe/Prague',
+  });
+};
+
 // Function to fetch all issues from Supabase
 export const fetchAllIssues = async (): Promise<Issue[]> => {
   try {
@@ -91,10 +104,18 @@ export const fetchAllIssues = async (): Promise<Issue[]> => {
   }
 };
 
-// Helper function to filter issues based on their 'done' status
-export const filterIssuesByStatus = (
-  issues: Issue[],
-  done: boolean,
-): Issue[] => {
-  return issues.filter((issue) => issue.done === done);
+// Function to toggle the 'done' status for an issue
+export const toggleDoneStatus = async (issue: Issue): Promise<void> => {
+  try {
+    const { data, error } = await supabase.from('issues').update({ done: !issue.done }).eq('id', issue.id);
+
+    if (error) {
+      throw error;
+    }
+
+    toast.success(`Task ${issue.done ? 'Unfinished' : 'Finished'} successfully`);
+  } catch (error) {
+    console.error('Error toggling done status');
+    toast.error('Error toggling done status');
+  }
 };

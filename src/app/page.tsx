@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchAllIssues, filterIssuesByStatus, Issue } from "../utils/utils";
+import { fetchAllIssues, Issue, toggleDoneStatus } from "../utils/utils";
 import IssueCard from "@components/IssueCard";
 
 export default function Home() {
@@ -20,9 +20,19 @@ export default function Home() {
     fetchIssues();
   }, []);
 
-  // Separate issues into two arrays based on their 'done' status
-  const undoneIssues = filterIssuesByStatus(allIssues, false);
-  const doneIssues = filterIssuesByStatus(allIssues, true);
+  const handleToggleDone = async (issue: Issue) => {
+    try {
+      await toggleDoneStatus(issue);
+      // Update the local state to reflect the change
+      setAllIssues((prevIssues) =>
+        prevIssues.map((prevIssue) =>
+          prevIssue.id === issue.id ? { ...prevIssue, done: !prevIssue.done } : prevIssue
+        )
+      );
+    } catch (error) {
+      console.error('Error toggling done status');
+    }
+  };
 
   return (
     <>
@@ -33,7 +43,7 @@ export default function Home() {
             {allIssues
               .filter((issue) => !issue.done)
               .map((undoneIssue) => (
-                <IssueCard key={undoneIssue.id} issue={undoneIssue} />
+                <IssueCard key={undoneIssue.id} issue={undoneIssue} onToggleDone={handleToggleDone} />
               ))}
           </div>
           <div className="flex-1 p-10">
@@ -41,7 +51,7 @@ export default function Home() {
             {allIssues
               .filter((issue) => issue.done)
               .map((doneIssue) => (
-                <IssueCard key={doneIssue.id} issue={doneIssue} />
+                <IssueCard key={doneIssue.id} issue={doneIssue} onToggleDone={handleToggleDone} />
               ))}
           </div>
         </div>
