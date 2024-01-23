@@ -8,7 +8,7 @@ const CreateIssue = () => {
   return (
     <div className="pt-20">
       <Toaster />
-      <IssueForm type="Create"/>
+      <IssueForm type="Create" />
     </div>
   );
 };

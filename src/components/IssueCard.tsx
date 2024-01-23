@@ -50,12 +50,8 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onToggleDone }) => {
       >
         {issue.done ? "Unfinish Issue" : "Finish Issue"}
       </button>
-      <button
-        className="ml-2 px-4 h-10 mt-2 font-medium border-indigo-600 border-2 rounded-lg"
-      >
-        <Link href={`/update-issue?id=${issue?.id}`}>
-            Edit issue
-        </Link>
+      <button className="ml-2 px-4 h-10 mt-2 font-medium border-indigo-600 border-2 rounded-lg">
+        <Link href={`/update-issue?id=${issue?.id}`}>Edit issue</Link>
       </button>
     </div>
   );

@@ -27,7 +27,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
         name: issue.name,
         description: issue.description,
         estimatedTime: issue.estimated_time
-          ? issue.estimated_time.toISOString().split('T')[0]
+          ? issue.estimated_time.toISOString().split("T")[0]
           : "",
       });
     }
