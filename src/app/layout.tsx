@@ -3,7 +3,8 @@ import "@styles/globals.css";
 import Navbar from "@components/Navbar";
 
 export const metadata = {
-  title: "Simple TODO App",
+  title: "TODO App",
+  description: "TODO App",
 };
 
 interface RootLayoutProps {

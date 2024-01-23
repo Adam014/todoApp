@@ -1,5 +1,6 @@
 import React from "react";
-import { Issue, formatDate } from "../utils/utils"; // Adjust the path accordingly
+import { Issue, formatDate } from "../utils/utils";
+import Link from "next/link";
 
 interface IssueCardProps {
   issue: Issue;
@@ -22,9 +23,9 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onToggleDone }) => {
       </div>
       <p className="text-gray-500">
         {issue.done ? (
-          <p className="text-green-400">Status: Done</p>
+          <span className="text-green-400">Status: Done</span>
         ) : (
-          <p className="text-red-600">Status: Undone</p>
+          <span className="text-red-600">Status: Undone</span>
         )}
       </p>
       <p className="text-gray-500">
@@ -48,6 +49,13 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, onToggleDone }) => {
         onClick={handleToggleDone}
       >
         {issue.done ? "Unfinish Issue" : "Finish Issue"}
+      </button>
+      <button
+        className="ml-2 px-4 h-10 mt-2 font-medium border-indigo-600 border-2 rounded-lg"
+      >
+        <Link href={`/update-issue?id=${issue?.id}`}>
+            Edit issue
+        </Link>
       </button>
     </div>
   );

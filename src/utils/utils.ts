@@ -133,3 +133,24 @@ export const toggleDoneStatus = async (
     toast.error("Error toggling done status");
   }
 };
+
+// Function to fetch an issue by its ID
+export const fetchIssueById = async (id: number): Promise<Issue | null> => {
+  try {
+    // Fetch the issue from the 'issues' table in Supabase based on the ID
+    const { data, error } = await supabase
+      .from("issues")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data || null;
+  } catch (error) {
+    console.error("Error fetching issue by ID:", error);
+    throw error;
+  }
+};

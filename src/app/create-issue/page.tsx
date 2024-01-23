@@ -2,13 +2,13 @@
 
 import React from "react";
 import { Toaster } from "react-hot-toast";
-import CreateIssueForm from "@components/CreateIssueForm";
+import IssueForm from "@components/IssueForm";
 
 const CreateIssue = () => {
   return (
     <div className="pt-20">
       <Toaster />
-      <CreateIssueForm />
+      <IssueForm type="Create"/>
     </div>
   );
 };
