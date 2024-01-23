@@ -8,6 +8,7 @@ interface EmailFormEvent extends React.FormEvent<HTMLFormElement> {
 
 // Define a type for the issue
 export interface Issue {
+  id?: number;
   name: string;
   description: string;
   done: boolean;
@@ -69,3 +70,24 @@ export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
 
 // Get the current date in "YYYY-MM-DD" format
 export const currentDate = new Date().toISOString().split('T')[0];
+
+// Function to fetch all issues from Supabase
+export const fetchAllIssues = async (): Promise<Issue[]> => {
+  try {
+    const { data, error } = await supabase.from('issues').select('*');
+
+    if (error) {
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching issues');
+    throw error;
+  }
+};
+
+// Helper function to filter issues based on their 'done' status
+export const filterIssuesByStatus = (issues: Issue[], done: boolean): Issue[] => {
+  return issues.filter((issue) => issue.done === done);
+};
