@@ -28,7 +28,7 @@ export default function Home() {
     <>
       <section>
         <div className="flex">
-          <div className="flex-1">
+          <div className="flex-1 p-10">
             <h2>Undone Issues</h2>
             {allIssues
               .filter((issue) => !issue.done)
@@ -36,7 +36,7 @@ export default function Home() {
                 <IssueCard key={undoneIssue.id} issue={undoneIssue} />
               ))}
           </div>
-          <div className="flex-1">
+          <div className="flex-1 p-10">
             <h2>Done Issues</h2>
             {allIssues
               .filter((issue) => issue.done)
