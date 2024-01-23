@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchAllIssues, Issue, toggleDoneStatus } from "../utils/utils";
+import { Toaster } from "react-hot-toast";
 import IssueCard from "@components/IssueCard";
 
 export default function Home() {
@@ -20,22 +21,13 @@ export default function Home() {
     fetchIssues();
   }, []);
 
-  const handleToggleDone = async (issue: Issue) => {
-    try {
-      await toggleDoneStatus(issue);
-      // Update the local state to reflect the change
-      setAllIssues((prevIssues) =>
-        prevIssues.map((prevIssue) =>
-          prevIssue.id === issue.id ? { ...prevIssue, done: !prevIssue.done } : prevIssue
-        )
-      );
-    } catch (error) {
-      console.error('Error toggling done status');
-    }
+  const handleToggleDone = async (issue: Issue, setAllIssues: React.Dispatch<React.SetStateAction<Issue[]>>) => {
+    await toggleDoneStatus(issue, setAllIssues);
   };
 
   return (
     <>
+      <Toaster />
       <section>
         <div className="flex">
           <div className="flex-1 p-10">
@@ -43,7 +35,7 @@ export default function Home() {
             {allIssues
               .filter((issue) => !issue.done)
               .map((undoneIssue) => (
-                <IssueCard key={undoneIssue.id} issue={undoneIssue} onToggleDone={handleToggleDone} />
+              <IssueCard key={undoneIssue.id} issue={undoneIssue} onToggleDone={(issue) => handleToggleDone(issue, setAllIssues)} />
               ))}
           </div>
           <div className="flex-1 p-10">
@@ -51,7 +43,7 @@ export default function Home() {
             {allIssues
               .filter((issue) => issue.done)
               .map((doneIssue) => (
-                <IssueCard key={doneIssue.id} issue={doneIssue} onToggleDone={handleToggleDone} />
+              <IssueCard key={doneIssue.id} issue={doneIssue} onToggleDone={(issue) => handleToggleDone(issue, setAllIssues)} />
               ))}
           </div>
         </div>

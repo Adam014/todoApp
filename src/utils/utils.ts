@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import emailjs from "emailjs-com";
 import supabase from "./db/supabaseConfig";
+import { useRouter } from "next/router";
 
 interface EmailFormEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement;
@@ -62,12 +63,10 @@ export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
     if (error) {
       throw error;
     }
-
     toast.success("Issue saved successfully");
     console.log("Issue saved successfully:");
   } catch (error) {
     console.error("Error saving issue");
-    // Optionally, you can handle error feedback to the user
     toast.error("Error saving issue");
   }
 };
@@ -104,16 +103,28 @@ export const fetchAllIssues = async (): Promise<Issue[]> => {
   }
 };
 
-// Function to toggle the 'done' status for an issue
-export const toggleDoneStatus = async (issue: Issue): Promise<void> => {
+// Function to toggle the 'done' status for an issue and update success_time
+export const toggleDoneStatus = async (issue: Issue, setAllIssues: React.Dispatch<React.SetStateAction<Issue[]>>): Promise<void> => {
   try {
-    const { data, error } = await supabase.from('issues').update({ done: !issue.done }).eq('id', issue.id);
+    const now = new Date();
+
+    const updates = {
+      done: !issue.done,
+      success_time: !issue.done ? now.toISOString() : null,
+    };
+
+    const { data, error } = await supabase
+      .from('issues')
+      .update(updates)
+      .eq('id', issue.id);
 
     if (error) {
       throw error;
     }
 
-    toast.success(`Task ${issue.done ? 'Unfinished' : 'Finished'} successfully`);
+    // Fetch the updated data and update the state
+    const updatedIssues = await supabase.from('issues').select('*');
+    setAllIssues(updatedIssues.data || []);
   } catch (error) {
     console.error('Error toggling done status');
     toast.error('Error toggling done status');
