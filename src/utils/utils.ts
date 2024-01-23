@@ -1,8 +1,20 @@
 import toast from "react-hot-toast";
 import emailjs from "emailjs-com";
+import supabase from './db/supabaseConfig';
 
 interface EmailFormEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement;
+}
+
+// Define a type for the issue
+export interface Issue {
+  name: string;
+  description: string;
+  done: boolean;
+  created_at: Date;
+  update_time: Date;
+  estimated_time: Date | null;
+  success_time: Date | null;
 }
 
 // function for sending the email
@@ -36,3 +48,21 @@ export const sendEmail = (e: EmailFormEvent): void => {
     );
 };
 
+// Function to save an issue to Supabase
+export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
+  try {
+    // Save the data to the 'issues' table in Supabase
+    const { data, error } = await supabase.from('issues').upsert([issue as any]);
+
+    if (error) {
+      throw error;
+    }
+
+    toast.success('Issue saved successfully');
+    console.log('Issue saved successfully:');
+  } catch (error) {
+    console.error('Error saving issue');
+    // Optionally, you can handle error feedback to the user
+    toast.error('Error saving issue');
+  }
+};
