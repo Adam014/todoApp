@@ -6,7 +6,6 @@ interface EmailFormEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement;
 }
 
-// Define a type for the issue
 export interface Issue {
   id?: number;
   name: string;
@@ -51,35 +50,29 @@ export const sendEmail = (e: EmailFormEvent): void => {
     );
 };
 
-// Function to save an issue to Supabase
+const handleSupabaseQuery = async (query: any): Promise<any> => {
+  try {
+    const { data, error } = await query;
+
+    if (error) {
+      throw error;
+    }
+
+    return data || null;
+  } catch (error) {
+    console.error("Error handling Supabase query:", error);
+    throw error;
+  }
+};
+
 export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
   try {
     const { id, name, description, estimated_time } = issue;
 
     if (id) {
-      // If the issue has an ID, update the existing record with specific fields
-      const { error } = await supabase
-        .from("issues")
-        .update({
-          name,
-          description,
-          estimated_time,
-          update_time: new Date(), // Update the update_time to the current date and time
-        })
-        .match({ id });
-
-      if (error) {
-        throw error;
-      }
+      await handleSupabaseQuery(supabase.from("issues").update({ name, description, estimated_time, update_time: new Date() }).match({ id }));
     } else {
-      // If the issue doesn't have an ID, insert a new record
-      const { data, error } = await supabase
-        .from("issues")
-        .upsert([issue as any]);
-
-      if (error) {
-        throw error;
-      }
+      await handleSupabaseQuery(supabase.from("issues").upsert([issue as any]));
     }
   } catch (error) {
     console.error("Error saving issue");
@@ -87,7 +80,26 @@ export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
   }
 };
 
-// Get the current date in "YYYY-MM-DD" format
+export const fetchAllIssues = async (): Promise<Issue[]> => {
+  const query = supabase.from("issues").select("*");
+  return handleSupabaseQuery(query) || [];
+};
+
+export const toggleDoneStatus = async (issue: Issue, setAllIssues: React.Dispatch<React.SetStateAction<Issue[]>>): Promise<void> => {
+  try {
+    const now = new Date();
+    const updates = { done: !issue.done, success_time: !issue.done ? now.toISOString() : null };
+
+    await handleSupabaseQuery(supabase.from("issues").update(updates).eq("id", issue.id));
+
+    const updatedIssues = await handleSupabaseQuery(supabase.from("issues").select("*"));
+    setAllIssues(updatedIssues.data || []);
+  } catch (error) {
+    console.error("Error toggling done status");
+    toast.error("Error toggling done status");
+  }
+};
+
 export const currentDate = new Date().toISOString().split("T")[0];
 
 export const formatDate = (date: Date) => {
@@ -103,62 +115,9 @@ export const formatDate = (date: Date) => {
   });
 };
 
-// Function to fetch all issues from Supabase
-export const fetchAllIssues = async (): Promise<Issue[]> => {
-  try {
-    const { data, error } = await supabase.from("issues").select("*");
-
-    if (error) {
-      throw error;
-    }
-
-    return data || [];
-  } catch (error) {
-    console.error("Error fetching issues");
-    throw error;
-  }
-};
-
-// Function to toggle the 'done' status for an issue and update success_time
-export const toggleDoneStatus = async (
-  issue: Issue,
-  setAllIssues: React.Dispatch<React.SetStateAction<Issue[]>>,
-): Promise<void> => {
-  try {
-    const now = new Date();
-
-    const updates = {
-      done: !issue.done,
-      success_time: !issue.done ? now.toISOString() : null,
-    };
-
-    const { data, error } = await supabase
-      .from("issues")
-      .update(updates)
-      .eq("id", issue.id);
-
-    if (error) {
-      throw error;
-    }
-
-    // Fetch the updated data and update the state
-    const updatedIssues = await supabase.from("issues").select("*");
-    setAllIssues(updatedIssues.data || []);
-  } catch (error) {
-    console.error("Error toggling done status");
-    toast.error("Error toggling done status");
-  }
-};
-
-// Function to fetch an issue by its ID
 export const fetchIssueById = async (id: number): Promise<Issue | null> => {
   try {
-    // Fetch the issue from the 'issues' table in Supabase based on the ID
-    const { data, error } = await supabase
-      .from("issues")
-      .select("*")
-      .eq("id", id)
-      .single();
+    const { data, error } = await supabase.from("issues").select("*").eq("id", id).single();
 
     if (error) {
       throw error;
