@@ -1,4 +1,3 @@
-// IssueForm.tsx
 import React, { useState, useEffect } from "react";
 import { saveIssueToSupabase, Issue, currentDate } from "@utils/utils";
 
@@ -7,21 +6,29 @@ interface IssueFormProps {
   issue?: Issue; // Only required when type is "Update"
 }
 
-// TODO: Fix two things
-// 1. When user gets to update-issue, we need to pre-fill the inputs with the name, description
-// and estimated time of the issue that user clicks
-// 2. When user submits the update form, we need to update the issue of the id from the url
+// TODO: Fix one thing
+// 1. When user submits the update form, we need to update the issue of the id from the url
 // not create a new one
 
 const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    estimatedTime: "",
+    estimatedTime: new Date(),
   });
 
+  useEffect(() => {
+    if (type === "Update" && issue && issue.estimated_time) {
+      setFormData({
+        name: issue.name,
+        description: issue.description,
+        estimatedTime: issue.estimated_time,
+      });
+    }
+  }, [type, issue]);
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({
       ...formData,
@@ -33,7 +40,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
     e.preventDefault();
 
     try {
-      const newIssue: Issue = {
+      const updatedIssue: Issue = {
         name: formData.name,
         description: formData.description,
         done: false,
@@ -46,20 +53,29 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
       };
 
       // Automatically set 'done' to true if the current date is equal to or later than the estimated time
-      if (newIssue.estimated_time && newIssue.estimated_time <= new Date()) {
-        newIssue.done = true;
+      if (
+        updatedIssue.estimated_time &&
+        updatedIssue.estimated_time <= new Date()
+      ) {
+        updatedIssue.done = true;
       }
 
-      // Save the issue to Supabase
-      await saveIssueToSupabase(newIssue);
+      if (type === "Update" && issue) {
+        // Update the existing issue by its ID
+        updatedIssue.id = issue.id;
+        await saveIssueToSupabase(updatedIssue);
+      } else {
+        // Create a new issue
+        await saveIssueToSupabase(updatedIssue);
+      }
 
       // Optionally, you can reset the form or redirect the user to a different page
-      setFormData({ name: "", description: "", estimatedTime: "" });
+      setFormData({ name: "", description: "", estimatedTime: new Date() });
     } catch (error) {
       console.error("Error saving issue");
       // Optionally, you can handle error feedback to the user
     }
-  };
+  }
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 text-gray-600 md:px-8">
@@ -103,9 +119,13 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
               required
               className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
               name="estimatedTime"
-              value={formData.estimatedTime}
+              value={
+                formData.estimatedTime instanceof Date
+                  ? ""
+                  : formData.estimatedTime
+              }
               onChange={handleChange}
-              min={currentDate} // Set the min attribute to the current date
+              min={currentDate}
             />
           </div>
           <button className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150">
