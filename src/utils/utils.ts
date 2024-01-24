@@ -1,7 +1,6 @@
 import toast from "react-hot-toast";
 import emailjs from "emailjs-com";
 import supabase from "./db/supabaseConfig";
-import { useRouter } from "next/router";
 
 interface EmailFormEvent extends React.FormEvent<HTMLFormElement> {
   target: HTMLFormElement;
