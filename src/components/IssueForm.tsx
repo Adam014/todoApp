@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { saveIssueToSupabase, Issue, currentDate } from "@utils/utils";
+import toast from "react-hot-toast";
 
 interface IssueFormProps {
   type: "Create" | "Update";
@@ -64,9 +65,11 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
         // Update the existing issue by its ID
         updatedIssue.id = issue.id;
         await saveIssueToSupabase(updatedIssue);
+        toast.success("The issue was updated successfully..");
       } else {
         // Create a new issue
         await saveIssueToSupabase(updatedIssue);
+        toast.success("The issue was created successfully..");
       }
 
       // Optionally, you can reset the form or redirect the user to a different page

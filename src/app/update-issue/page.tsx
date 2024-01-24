@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchIssueById, Issue } from "@utils/utils";
 import IssueForm from "@components/IssueForm";
+import { Toaster } from "react-hot-toast";
 
 const UpdateIssuePage = () => {
   const [issue, setIssue] = useState<Issue | null>(null);
@@ -25,6 +26,7 @@ const UpdateIssuePage = () => {
 
   return (
     <div className="mt-20">
+      <Toaster />
       {issue && <IssueForm type="Update" issue={issue} />}
     </div>
   );

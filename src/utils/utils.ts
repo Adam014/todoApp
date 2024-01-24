@@ -55,16 +55,33 @@ export const sendEmail = (e: EmailFormEvent): void => {
 // Function to save an issue to Supabase
 export const saveIssueToSupabase = async (issue: Issue): Promise<void> => {
   try {
-    // Save the data to the 'issues' table in Supabase
-    const { data, error } = await supabase
-      .from("issues")
-      .upsert([issue as any]);
+    const { id, name, description, estimated_time } = issue;
 
-    if (error) {
-      throw error;
+    if (id) {
+      // If the issue has an ID, update the existing record with specific fields
+      const { error } = await supabase
+        .from("issues")
+        .update({
+          name,
+          description,
+          estimated_time,
+          update_time: new Date(), // Update the update_time to the current date and time
+        })
+        .match({ id });
+
+      if (error) {
+        throw error;
+      }
+    } else {
+      // If the issue doesn't have an ID, insert a new record
+      const { data, error } = await supabase
+        .from("issues")
+        .upsert([issue as any]);
+
+      if (error) {
+        throw error;
+      }
     }
-    toast.success("Issue saved successfully");
-    console.log("Issue saved successfully:");
   } catch (error) {
     console.error("Error saving issue");
     toast.error("Error saving issue");

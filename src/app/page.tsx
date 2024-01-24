@@ -35,31 +35,39 @@ export default function Home() {
         <div className="flex issues-container">
           <div className="flex-1 p-10">
             <h2>Undone Issues</h2>
-            {allIssues
-              .filter((issue) => !issue.done)
-              .map((undoneIssue) => (
-                <IssueCard
-                  key={undoneIssue.id}
-                  issue={undoneIssue}
-                  onToggleDone={(issue) =>
-                    handleToggleDone(issue, setAllIssues)
-                  }
-                />
-              ))}
+            {allIssues.length === 0 || allIssues.every((issue) => issue.done) ? (
+              <p>No undone issues to display.</p>
+            ) : (
+              allIssues
+                .filter((issue) => !issue.done)
+                .map((undoneIssue) => (
+                  <IssueCard
+                    key={undoneIssue.id}
+                    issue={undoneIssue}
+                    onToggleDone={(issue) =>
+                      handleToggleDone(issue, setAllIssues)
+                    }
+                  />
+                ))
+            )}
           </div>
           <div className="flex-1 p-10">
             <h2>Done Issues</h2>
-            {allIssues
-              .filter((issue) => issue.done)
-              .map((doneIssue) => (
-                <IssueCard
-                  key={doneIssue.id}
-                  issue={doneIssue}
-                  onToggleDone={(issue) =>
-                    handleToggleDone(issue, setAllIssues)
-                  }
-                />
-              ))}
+            {allIssues.length === 0 || allIssues.every((issue) => !issue.done) ? (
+              <p>No done issues to display.</p>
+            ) : (
+              allIssues
+                .filter((issue) => issue.done)
+                .map((doneIssue) => (
+                  <IssueCard
+                    key={doneIssue.id}
+                    issue={doneIssue}
+                    onToggleDone={(issue) =>
+                      handleToggleDone(issue, setAllIssues)
+                    }
+                  />
+                ))
+            )}
           </div>
         </div>
       </section>
