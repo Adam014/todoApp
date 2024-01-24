@@ -7,6 +7,7 @@ import IssueForm from "@components/IssueForm";
 
 const UpdateIssuePage = () => {
   const [issue, setIssue] = useState<Issue | null>(null);
+  console.log(issue);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 

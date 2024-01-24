@@ -7,7 +7,7 @@ h2 {
 }
 
 @media screen and (max-width: 842px) {
-  .issues-container{
+  .issues-container {
     display: grid;
   }
 }
