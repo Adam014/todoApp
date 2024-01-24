@@ -20,19 +20,6 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
     estimatedTime: "",
   });
 
-  useEffect(() => {
-    // Update form fields when the issue prop changes
-    if (type === "Update" && issue) {
-      setFormData({
-        name: issue.name,
-        description: issue.description,
-        estimatedTime: issue.estimated_time
-          ? issue.estimated_time.toISOString().split("T")[0]
-          : "",
-      });
-    }
-  }, [type, issue]);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -122,7 +109,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
             />
           </div>
           <button className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150">
-            {type === "Create" ? "Submit" : "Update"}
+            {type === "Create" ? "Create" : "Update"}
           </button>
         </form>
       </div>
