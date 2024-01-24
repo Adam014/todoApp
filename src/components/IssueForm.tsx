@@ -37,7 +37,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCreateOrUpdateIssue = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -76,7 +76,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
       setFormData({ name: "", description: "", estimatedTime: new Date() });
     } catch (error) {
       console.error("Error saving issue");
-      // Optionally, you can handle error feedback to the user
+      toast.error("Error saving issue");
     }
   }
 
@@ -91,7 +91,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
         </p>
       </div>
       <div className="mt-12 max-w-lg mx-auto">
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleCreateOrUpdateIssue}>
           <div className="[&>*]:w-full">
             <div>
               <label className="font-medium">Name</label>
