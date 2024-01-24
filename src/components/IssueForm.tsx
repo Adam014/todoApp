@@ -42,13 +42,6 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
     });
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      estimatedTime: e.target.value,
-    });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -124,7 +117,7 @@ const IssueForm: React.FC<IssueFormProps> = ({ type, issue }) => {
               className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
               name="estimatedTime"
               value={formData.estimatedTime}
-              onChange={handleDateChange}
+              onChange={handleChange}
               min={currentDate} // Set the min attribute to the current date
             />
           </div>

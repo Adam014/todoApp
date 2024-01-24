@@ -32,7 +32,7 @@ export default function Home() {
     <>
       <Toaster />
       <section>
-        <div className="flex">
+        <div className="flex issues-container">
           <div className="flex-1 p-10">
             <h2>Undone Issues</h2>
             {allIssues

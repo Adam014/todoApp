@@ -5,3 +5,9 @@
 h2 {
   font-size: 2rem;
 }
+
+@media screen and (max-width: 842px) {
+  .issues-container{
+    display: grid;
+  }
+}
